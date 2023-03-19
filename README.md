@@ -1,1 +1,1 @@
-# spring-kafka-gradle
+# spring-kafka-maven

@@ -1,0 +1,80 @@
+application:
+  contact.address.topic: ${CONTACT_ADDRESS_TOPIC}
+  country.topic: ${COUNTRY_TOPIC}
+  failure.output.topic: ${ERROR_TOPIC}
+  in.memory.state.stores: ${IN_MEMORY_STATE:true}
+  output.topic: ${OUTPUT_TOPIC}
+  state.store.cleanup: ${STATE_STORE_CLEANUP:false}
+  state.topic: ${STATE_TOPIC}
+kafka:
+  health.streams.enabled: true
+  producer:
+    application.id: ${APP_ID}-errors
+    basic.auth.credentials.source: USER_INFO
+    basic.auth.user.info: ${SCHEMA_USERNAME:}:${SCHEMA_PASSWORD:}
+    bootstrap.servers: ${BOOTSTRAP_URL}
+    key.serializer: org.apache.kafka.common.serialization.LongSerializer
+    value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+    sasl.mechanism: ${SASL_MECHANISM:PLAIN}
+    sasl.jaas.config: >-
+      org.apache.kafka.common.security.plain.PlainLoginModule required
+      username="${SASL_USERNAME:}"
+      password="${SASL_PASSWORD:}";
+    schema.registry.auth: ${SCHEMA_AUTH:false}
+    schema.registry.url: ${SCHEMA_URL}
+    security.protocol:  ${SECURITY_PROTOCOL:PLAINTEXT}
+  streams:
+    acks: ${ACKS:all}
+    application.id: ${APP_ID}
+    auto.register.schemas: true
+    auto.reset.offset: ${AUTO_RESET_OFFSET:earliest}
+    basic.auth.credentials.source: USER_INFO
+    basic.auth.user.info: ${SCHEMA_USERNAME:}:${SCHEMA_PASSWORD:}
+    batch.size: ${BATCH_SIZE:16384}
+    bootstrap.servers: ${BOOTSTRAP_URL}
+    buffer.memory: ${BUFFER_MEMORY:33554432}
+    buffered.records.per.partition: ${BUFFERED_RECORDS_PER_PARTITION:1000}
+    cache.max.bytes.buffering: ${CACHE_MAX_BYTES_BUFFERING:10485760}
+    commit.interval.ms: ${COMMIT_INTERVAL_MS:30000}
+    default.deserialization.exception.handler: org.apache.kafka.streams.errors.LogAndFailExceptionHandler
+    default.key.serde: io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
+    default.production.exception.handler: org.apache.kafka.streams.errors.DefaultProductionExceptionHandler
+    default.timestamp.extractor: org.apache.kafka.streams.processor.WallclockTimestampExtractor
+    default.value.serde: io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
+    enabled.idempotence: ${ENABLE_IDEMPOTENCE:true}
+    fetch.max.wait.ms: ${FETCH_MAX_WAIT_MS:500}
+    fetch.min.bytes: ${FETCH_MIN_BYTES:1}
+    group.id: ${GROUP_ID}
+    isolation.level: ${ISOLATION_LEVEL:read_uncommitted}
+    linger.ms: ${LINGER_MS:0}
+    max.in.flight.requests.per.connection: ${MAX_IN_FLIGHT_REQUESTS:1}
+    #metric.reporters: "io.micronaut.configuration.kafka.streams.metrics.KafkaStreamsMetricsReporter"
+    metrics.recording.level: ${METRICS_RECORDING_LEVEL:INFO}
+    min.insync.replicas: ${MIN_INSYNC_REPLICAS:0}
+    num.standby.replicas: ${NUM_STANDBY_REPLICAS:0}
+    num.stream.threads: ${NUM_STREAM_THREADS:1}
+    poll.ms: ${POLL_MS:100}
+    processing.guarantee: ${PROCESSING_GUARANTEE:at_least_once}
+    replication.factor: ${REPLICATION_FACTOR:-1}
+    request.timeout.ms: ${REQUEST_TIMEOUT:60000}
+    retries: ${RETRIES:2147483647}
+    rocksdb.block.size.kb: ${ROCKSDB_BLOCK_SIZE_KB:4}
+    rocksdb.config.setter: "com.mycompany.kafka.streams.RocksDBConfig"
+    rocksdb.index.filter.block.ratio: ${ROCKSDB_INDEX_FILTER_BLOCK_RATIO:0}
+    rocksdb.memtable.instances: ${ROCKSDB_MEMTABLE_INSTANCES:3}
+    rocksdb.memtable.size.mb: ${ROCKSDB_MEMTABLE_SIZE_MB:16}
+    rocksdb.blockcache.memory.mb: ${ROCKSDB_BLOCKCACHE_MEMORY_MB:50}
+    sasl.mechanism: ${SASL_MECHANISM:PLAIN}
+    sasl.jaas.config: >-
+      org.apache.kafka.common.security.plain.PlainLoginModule required
+      username="${SASL_USERNAME:}"
+      password="${SASL_PASSWORD:}";
+    schema.cache.capacity: ${SCHEMA_CACHE_CAPACITY:2000}
+    schema.registry.auth: ${SCHEMA_AUTH:false}
+    schema.registry.url: ${SCHEMA_URL}
+    security.protocol:  ${SECURITY_PROTOCOL:PLAINTEXT} 
+    session.timeout.ms: ${SESSION_TIMEOUT:30000}
+    state.dir: ${STATE_DIR:/tmp/kstreams}
+    topology.optimization: all
+server:
+  port : ${HTTP_PORT:8080}

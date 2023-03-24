@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.0.4</version>
+    </parent>
+
+    <groupId>com.mycompany</groupId>
+    <artifactId>spring-kafka-maven</artifactId>
+    <packaging>pom</packaging>
+    <version>${revision}</version>
+
+    <organization>
+        <name>My Company</name>
+        <url>https://www.mycompany.com/</url>
+    </organization>
+    <url>https://www.mycompany.com/</url>
+    <description>
+        Spring Kafka Maven Streams
+    </description>
+
+    <properties>
+        <revision>1.0</revision>
+        <assertj.version>3.24.2</assertj.version>
+        <avro.version>1.11.0</avro.version>
+        <confluent.version>7.3.1</confluent.version>
+        <findbugs.version>3.0.1</findbugs.version>
+        <javafaker.version>1.0.2</javafaker.version>
+        <junit.version>5.9.2</junit.version>
+        <kafka.scala.version>2.13</kafka.scala.version>
+        <kafka.version>3.3.1</kafka.version>
+        <logback.version>1.4.6</logback.version>
+        <lz4.version>1.8.0</lz4.version>
+        <mockito.version>5.2.0</mockito.version>
+        <rocksdb.version>6.29.4.1</rocksdb.version>
+        <spring.boot.version>3.0.4</spring.boot.version>
+        <spring-cloud.version>2022.0.1</spring-cloud.version>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <docker.registry>https://index.docker.io/v1/</docker.registry>
+        <docker.image.registry>com.mycompany</docker.image.registry>
+        <jmx.exporter.agent.url>https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.18.0/jmx_prometheus_javaagent-0.18.0.jar</jmx.exporter.agent.url>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>maven</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>confluent</id>
+            <name>Confluent</name>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <modules>
+        <module>common-schemas/pom.xml</module>
+        <module>common-streams/pom.xml</module>
+        <module>common-streams-test/pom.xml</module>
+        <module>account-contact-stream/pom.xml</module>
+        <module>account-stream/pom.xml</module>
+        <module>contact-address-stream/pom.xml</module>
+        <module>contact-stream/pom.xml</module>
+    </modules>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                        <!--TODO: enable this once we have warnings under control<arg>-Werror</arg>-->
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.7.3.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <!-- Checkstyle is not currently used at Western National but might be a good addition in the future -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>none</phase>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <configLocation>checkstyle.xml</configLocation>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.39</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
